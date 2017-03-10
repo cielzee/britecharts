@@ -140,10 +140,9 @@
   display: none; }
 
 .brush-chart .brush-area {
-  fill: #eff2f5; }
+  fill: #ccf7f6; }
 
 .brush-chart rect.brush-rect.selection {
-  fill: url("#brush-area-gradient");
   fill-opacity: 1;
   stroke-linejoin: round;
   mix-blend-mode: color-burn; }

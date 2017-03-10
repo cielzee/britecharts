@@ -140,12 +140,17 @@
   display: none; }
 
 .brush-chart .brush-area {
-  fill: url("#brush-area-gradient"); }
+  fill: #eff2f5; }
 
-.brush-chart .extent.brush-rect {
-  stroke: #fff;
-  stroke-width: 3;
-  fill: rgba(69, 73, 78, 0.05); }
+.brush-chart rect.brush-rect.selection {
+  fill: url("#brush-area-gradient");
+  fill-opacity: 1;
+  stroke-linejoin: round;
+  mix-blend-mode: color-burn; }
+
+.brush-chart rect.brush-rect.handle {
+  fill: #00d8d2;
+  width: 0.25rem; }
 
 .brush-chart .axis path {
   display: none; }

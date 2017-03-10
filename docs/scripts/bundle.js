@@ -56,7 +56,7 @@
 	__webpack_require__(2);
 	__webpack_require__(6);
 	__webpack_require__(38);
-	__webpack_require__(45);
+	__webpack_require__(44);
 	__webpack_require__(51);
 	__webpack_require__(60);
 	__webpack_require__(64);
@@ -2892,12 +2892,11 @@
 	    if (containerWidth) {
 	        // dataset = testDataSet.withReportData().build();
 	        // dataset = testDataSet.with3Sources().build();
-	        dataset = testDataSet.with6Sources().build();
-	        // dataset = testDataSet.withLargeData().build();
-	        // dataset = testDataSet.withGeneratedData().build();
+	        // dataset = testDataSet.with6Sources().build();
+	        dataset = testDataSet.withLargeData().build();
 	
 	        // StackedAreChart Setup and start
-	        stackedArea.tooltipThreshold(600).width(containerWidth).dateLabel('dateUTC').valueLabel('views').on('customMouseOver', function () {
+	        stackedArea.tooltipThreshold(600).width(containerWidth).on('customMouseOver', function () {
 	            chartTooltip.show();
 	        }).on('customMouseMove', function (dataPoint, topicColorMap, dataPointXPosition) {
 	            chartTooltip.update(dataPoint, topicColorMap, dataPointXPosition);
@@ -2916,7 +2915,7 @@
 	
 	        // Note that if the viewport width is less than the tooltipThreshold value,
 	        // this container won't exist, and the tooltip won't show up
-	        tooltipContainer = d3Selection.select('.js-stacked-area-chart-tooltip-container .metadata-group .vertical-marker-container');
+	        tooltipContainer = d3Selection.select('.metadata-group .vertical-marker-container');
 	        tooltipContainer.datum([]).call(chartTooltip);
 	
 	        d3Selection.select('#button').on('click', function () {
@@ -2925,50 +2924,9 @@
 	    }
 	}
 	
-	function createStackedAreaChartWithFixedAspectRatio(optionalColorSchema) {
-	    var stackedArea = stackedAreaChart(),
-	        chartTooltip = tooltip(),
-	        testDataSet = new stackedDataBuilder.StackedAreaDataBuilder(),
-	        container = d3Selection.select('.js-stacked-area-chart-fixed-container'),
-	        containerWidth = container.node() ? container.node().getBoundingClientRect().width : false,
-	        tooltipContainer,
-	        dataset;
-	
-	    if (containerWidth) {
-	        // dataset = testDataSet.withReportData().build();
-	        dataset = testDataSet.with3Sources().build();
-	        // dataset = testDataSet.with6Sources().build();
-	        // dataset = testDataSet.withLargeData().build();
-	
-	        // StackedAreChart Setup and start
-	        stackedArea.tooltipThreshold(600).aspectRatio(0.6).width(containerWidth).dateLabel('dateUTC').valueLabel('views').on('customMouseOver', function () {
-	            chartTooltip.show();
-	        }).on('customMouseMove', function (dataPoint, topicColorMap, dataPointXPosition) {
-	            chartTooltip.update(dataPoint, topicColorMap, dataPointXPosition);
-	        }).on('customMouseOut', function () {
-	            chartTooltip.hide();
-	        });
-	
-	        if (optionalColorSchema) {
-	            stackedArea.colorSchema(optionalColorSchema);
-	        }
-	
-	        container.datum(dataset.data).call(stackedArea);
-	
-	        // Tooltip Setup and start
-	        chartTooltip.topicLabel('values').title('Testing tooltip');
-	
-	        // Note that if the viewport width is less than the tooltipThreshold value,
-	        // this container won't exist, and the tooltip won't show up
-	        tooltipContainer = d3Selection.select('.js-stacked-area-chart-fixed-container .metadata-group .vertical-marker-container');
-	        tooltipContainer.datum([]).call(chartTooltip);
-	    }
-	}
-	
 	if (d3Selection.select('.js-stacked-area-chart-tooltip-container').node()) {
 	    // Chart creation
 	    createStackedAreaChartWithTooltip();
-	    createStackedAreaChartWithFixedAspectRatio();
 	
 	    // For getting a responsive behavior on our chart,
 	    // we'll need to listen to the window resize event
@@ -2976,7 +2934,6 @@
 	        d3Selection.selectAll('.stacked-area').remove();
 	
 	        createStackedAreaChartWithTooltip();
-	        createStackedAreaChartWithFixedAspectRatio();
 	    };
 	
 	    // Redraw charts on window resize
@@ -3025,8 +2982,6 @@
 	    // Extended Red Palette
 	    var extendedRedColorSchema = ['#ffd8d4', '#ffb5b0', '#ff938c', '#ff766c', '#ff584c', '#f04b42', '#e03d38', '#be2e29', '#9c1e19'];
 	
-	    var singleColorAloeGreen = ['#7bdcc0'];
-	
 	    return {
 	        colorSchemas: {
 	            britechartsColorSchema: britechartsColorSchema,
@@ -3038,8 +2993,7 @@
 	            extendedYellowColorSchema: extendedYellowColorSchema,
 	            extendedPinkColorSchema: extendedPinkColorSchema,
 	            extendedPurpleColorSchema: extendedPurpleColorSchema,
-	            extendedRedColorSchema: extendedRedColorSchema,
-	            singleColorAloeGreen: singleColorAloeGreen
+	            extendedRedColorSchema: extendedRedColorSchema
 	        },
 	        colorSchemasHuman: {
 	            'britechartsColorSchema': 'Britecharts Default',
@@ -3085,8 +3039,8 @@
 	    var d3Transition = __webpack_require__(22);
 	
 	    var _ = __webpack_require__(3);
-	    var colorHelper = __webpack_require__(7);
 	    var exportChart = __webpack_require__(24);
+	    var colorHelper = __webpack_require__(7);
 	
 	    var ONE_AND_A_HALF_YEARS = 47304000000;
 	    var ONE_DAY = 86400001;
@@ -3100,26 +3054,6 @@
 	    /**
 	     * @typdef D3Layout
 	     * @type function
-	     */
-	
-	    /**
-	     * @typedef areaChartData
-	     * @type {Object}
-	     * @property {Object[]} data       All data entries
-	     * @property {String} date         Date of the entry
-	     * @property {String} name         Name of the entry
-	     * @property {Number} value        Value of the entry
-	     *
-	     * @example
-	     * {
-	     *     'data': [
-	     *         {
-	     *             "date": "2011-01-05T00:00:00Z",
-	     *             "name": "Direct",
-	     *             "value": 0
-	     *         }
-	     *     ]
-	     * }
 	     */
 	
 	    /**
@@ -3157,7 +3091,6 @@
 	            xMonthAxis = void 0,
 	            yScale = void 0,
 	            yAxis = void 0,
-	            aspectRatio = null,
 	            monthAxisPadding = 30,
 	            numVerticalTicks = 5,
 	            yTickTextYOffset = -8,
@@ -3205,9 +3138,8 @@
 	            bottom: 0,
 	            right: 0
 	        },
-	            dateLabel = 'date',
-	            valueLabel = 'value',
-	            keyLabel = 'name',
+	            dateLabel = 'dateUTC',
+	            valueLabel = 'views',
 	
 	
 	        // getters
@@ -3247,14 +3179,14 @@
 	          * This function creates the graph using the selection and data provided
 	          * @param {D3Selection} _selection A d3 selection that represents
 	          * the container(s) where the chart(s) will be rendered
-	          * @param {areaChartData} _data The data to attach and generate the chart
+	          * @param {Object} _data The data to attach and generate the chart
 	          */
 	        function exports(_selection) {
 	            _selection.each(function (_data) {
 	                chartWidth = width - margin.left - margin.right;
 	                chartHeight = height - margin.top - margin.bottom;
 	                data = cleanData(_data);
-	                dataByDate = getDataByDate(data);
+	                dataByDate = d3Collection.nest().key(getDate).entries(_(_data).sortBy('date'));
 	
 	                buildLayers();
 	                buildScales();
@@ -3277,6 +3209,20 @@
 	         */
 	        function addMouseEvents() {
 	            svg.on('mouseover', handleMouseOver).on('mouseout', handleMouseOut).on('mousemove', handleMouseMove);
+	        }
+	
+	        /**
+	         * Calculates the maximum number of ticks for the x axis
+	         * @param  {Number} width Chart width
+	         * @param  {Number} dataPointNumber  Number of entries on the data
+	         * @return {Number}       Number of ticks to render
+	         */
+	        function getMaxNumOfHorizontalTicks(width, dataPointNumber) {
+	            var singleTickWidth = 30,
+	                spacing = 30,
+	                ticksForWidth = Math.ceil(width / (singleTickWidth + spacing));
+	
+	            return Math.min(dataPointNumber, ticksForWidth);
 	        }
 	
 	        /**
@@ -3538,30 +3484,6 @@
 	        }
 	
 	        /**
-	         * Calculates the maximum number of ticks for the x axis
-	         * @param  {Number} width Chart width
-	         * @param  {Number} dataPointNumber  Number of entries on the data
-	         * @return {Number}       Number of ticks to render
-	         */
-	        function getMaxNumOfHorizontalTicks(width, dataPointNumber) {
-	            var singleTickWidth = 30,
-	                spacing = 30,
-	                ticksForWidth = Math.ceil(width / (singleTickWidth + spacing));
-	
-	            return Math.min(dataPointNumber, ticksForWidth);
-	        }
-	
-	        /**
-	         * Orders the data by date for consumption on the chart tooltip
-	         * @param  {areaChartData} data    Chart data
-	         * @return {Object[]}               Chart data ordered by date
-	         * @private
-	         */
-	        function getDataByDate(data) {
-	            return d3Collection.nest().key(getDate).entries(_(data).sortBy('date'));
-	        }
-	
-	        /**
 	         * Computes the maximum sum of values for any date
 	         *
 	         * @return {Number} Max value
@@ -3717,48 +3639,6 @@
 	        // Accessors
 	
 	        /**
-	         * Gets or Sets the aspect ratio of the chart
-	         * @param  {Number} _x Desired aspect ratio for the graph
-	         * @return { (Number | Module) } Current aspect ratio or Area Chart module to chain calls
-	         * @public
-	         */
-	        exports.aspectRatio = function (_x) {
-	            if (!arguments.length) {
-	                return aspectRatio;
-	            }
-	            aspectRatio = _x;
-	            return this;
-	        };
-	
-	        /**
-	         * Gets or Sets the colorSchema of the chart
-	         * @param  {String[]} _x Desired colorSchema for the graph
-	         * @return { colorSchema | module} Current colorSchema or Chart module to chain calls
-	         * @public
-	         */
-	        exports.colorSchema = function (_x) {
-	            if (!arguments.length) {
-	                return colorSchema;
-	            }
-	            colorSchema = _x;
-	            return this;
-	        };
-	
-	        /**
-	         * Gets or Sets the dateLabel of the chart
-	         * @param  {Number} _x Desired dateLabel for the graph
-	         * @return { dateLabel | module} Current dateLabel or Chart module to chain calls
-	         * @public
-	         */
-	        exports.dateLabel = function (_x) {
-	            if (!arguments.length) {
-	                return dateLabel;
-	            }
-	            dateLabel = _x;
-	            return this;
-	        };
-	
-	        /**
 	         * Gets or Sets the height of the chart
 	         * @param  {Number} _x Desired width for the graph
 	         * @return { height | module} Current height or Area Chart module to chain calls
@@ -3768,24 +3648,7 @@
 	            if (!arguments.length) {
 	                return height;
 	            }
-	            if (aspectRatio) {
-	                width = Math.ceil(_x / aspectRatio);
-	            }
 	            height = _x;
-	            return this;
-	        };
-	
-	        /**
-	         * Gets or Sets the keyLabel of the chart
-	         * @param  {Number} _x Desired keyLabel for the graph
-	         * @return { keyLabel | module} Current keyLabel or Chart module to chain calls
-	         * @public
-	         */
-	        exports.keyLabel = function (_x) {
-	            if (!arguments.length) {
-	                return keyLabel;
-	            }
-	            keyLabel = _x;
 	            return this;
 	        };
 	
@@ -3818,6 +3681,20 @@
 	        };
 	
 	        /**
+	         * Gets or Sets the width of the chart
+	         * @param  {Number} _x Desired width for the graph
+	         * @return { width | module} Current width or Area Chart module to chain calls
+	         * @public
+	         */
+	        exports.width = function (_x) {
+	            if (!arguments.length) {
+	                return width;
+	            }
+	            width = _x;
+	            return this;
+	        };
+	
+	        /**
 	         * Gets or Sets the valueLabel of the chart
 	         * @param  {Number} _x Desired valueLabel for the graph
 	         * @return { valueLabel | module} Current valueLabel or Chart module to chain calls
@@ -3832,19 +3709,30 @@
 	        };
 	
 	        /**
-	         * Gets or Sets the width of the chart
-	         * @param  {Number} _x Desired width for the graph
-	         * @return { width | module} Current width or Area Chart module to chain calls
+	         * Gets or Sets the dateLabel of the chart
+	         * @param  {Number} _x Desired dateLabel for the graph
+	         * @return { dateLabel | module} Current dateLabel or Chart module to chain calls
 	         * @public
 	         */
-	        exports.width = function (_x) {
+	        exports.dateLabel = function (_x) {
 	            if (!arguments.length) {
-	                return width;
+	                return dateLabel;
 	            }
-	            if (aspectRatio) {
-	                height = Math.ceil(_x * aspectRatio);
+	            dateLabel = _x;
+	            return this;
+	        };
+	
+	        /**
+	         * Gets or Sets the colorSchema of the chart
+	         * @param  {String[]} _x Desired colorSchema for the graph
+	         * @return { colorSchema | module} Current colorSchema or Chart module to chain calls
+	         * @public
+	         */
+	        exports.colorSchema = function (_x) {
+	            if (!arguments.length) {
+	                return colorSchema;
 	            }
-	            width = _x;
+	            colorSchema = _x;
 	            return this;
 	        };
 	
@@ -11201,11 +11089,11 @@
 /* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// https://d3js.org/d3-timer/ Version 1.0.4. Copyright 2017 Mike Bostock.
+	// https://d3js.org/d3-timer/ Version 1.0.3. Copyright 2016 Mike Bostock.
 	(function (global, factory) {
-		 true ? factory(exports) :
-		typeof define === 'function' && define.amd ? define(['exports'], factory) :
-		(factory((global.d3 = global.d3 || {})));
+	   true ? factory(exports) :
+	  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+	  (factory((global.d3 = global.d3 || {})));
 	}(this, (function (exports) { 'use strict';
 	
 	var frame = 0;
@@ -11219,7 +11107,6 @@
 	var clockSkew = 0;
 	var clock = typeof performance === "object" && performance.now ? performance : Date;
 	var setFrame = typeof requestAnimationFrame === "function" ? requestAnimationFrame : function(f) { setTimeout(f, 17); };
-	
 	function now() {
 	  return clockNow || (setFrame(clearNow), clockNow = clock.now() + clockSkew);
 	}
@@ -11314,12 +11201,12 @@
 	    if (time < Infinity) timeout = setTimeout(wake, delay);
 	    if (interval) interval = clearInterval(interval);
 	  } else {
-	    if (!interval) clockLast = clockNow, interval = setInterval(poke, pokeDelay);
+	    if (!interval) interval = setInterval(poke, pokeDelay);
 	    frame = 1, setFrame(wake);
 	  }
 	}
 	
-	var timeout$1 = function(callback, delay, time) {
+	function timeout$1(callback, delay, time) {
 	  var t = new Timer;
 	  delay = delay == null ? 0 : +delay;
 	  t.restart(function(elapsed) {
@@ -11327,9 +11214,9 @@
 	    callback(elapsed + delay);
 	  }, delay, time);
 	  return t;
-	};
+	}
 	
-	var interval$1 = function(callback, delay, time) {
+	function interval$1(callback, delay, time) {
 	  var t = new Timer, total = delay;
 	  if (delay == null) return t.restart(callback, delay, time), t;
 	  delay = +delay, time = time == null ? now() : +time;
@@ -11339,7 +11226,7 @@
 	    callback(elapsed);
 	  }, delay, time);
 	  return t;
-	};
+	}
 	
 	exports.now = now;
 	exports.timer = timer;
@@ -11350,7 +11237,6 @@
 	Object.defineProperty(exports, '__esModule', { value: true });
 	
 	})));
-
 
 /***/ },
 /* 24 */
@@ -16389,9 +16275,8 @@
 	var d3Selection = __webpack_require__(4),
 	    PubSub = __webpack_require__(5),
 	    bar = __webpack_require__(39),
-	    miniTooltip = __webpack_require__(41),
-	    colors = __webpack_require__(7),
-	    dataBuilder = __webpack_require__(42);
+	    miniTooltip = __webpack_require__(40),
+	    dataBuilder = __webpack_require__(41);
 	
 	function createBarChart() {
 	    var barChart = bar(),
@@ -16422,11 +16307,11 @@
 	        dataset = testDataSet.withColors().build();
 	
 	        barChart.margin({
-	            left: 120,
+	            left: 80,
 	            right: 20,
 	            top: 20,
 	            bottom: 5
-	        }).horizontal(true).colorSchema(colors.colorSchemas.britechartsColorSchema).width(containerWidth).yAxisPaddingBetweenChart(30).height(300).percentageAxisToMaxRatio(1.3).on('customMouseOver', tooltip.show).on('customMouseMove', tooltip.update).on('customMouseOut', tooltip.hide);
+	        }).horizontal(true).width(containerWidth).height(300).on('customMouseOver', tooltip.show).on('customMouseMove', tooltip.update).on('customMouseOut', tooltip.hide);
 	
 	        barContainer.datum(dataset).call(barChart);
 	
@@ -16489,16 +16374,12 @@
 	
 	    var d3Array = __webpack_require__(9);
 	    var d3Axis = __webpack_require__(10);
-	    var d3Color = __webpack_require__(17);
 	    var d3Dispatch = __webpack_require__(12);
-	    var d3Format = __webpack_require__(14);
 	    var d3Scale = __webpack_require__(15);
 	    var d3Selection = __webpack_require__(4);
 	    var d3Transition = __webpack_require__(22);
 	
-	    var textHelper = __webpack_require__(40);
 	    var exportChart = __webpack_require__(24);
-	    var colorHelper = __webpack_require__(7);
 	
 	    /**
 	     * @typedef BarChartData
@@ -16554,17 +16435,8 @@
 	            chartHeight = void 0,
 	            xScale = void 0,
 	            yScale = void 0,
-	            colorSchema = colorHelper.colorSchemas.singleColorAloeGreen,
-	            colorScale = void 0,
-	            topicColorMap = void 0,
 	            numOfVerticalTicks = 5,
 	            numOfHorizontalTicks = 5,
-	            percentageAxisToMaxRatio = 1,
-	            enablePercentageLabels = false,
-	            percentageLabelMargin = 7,
-	            percentageLabelSize = 12,
-	            horizontalLabelFormat = '.0%',
-	            verticalLabelFormat = '.0f',
 	            xAxis = void 0,
 	            yAxis = void 0,
 	            xAxisPadding = {
@@ -16573,8 +16445,6 @@
 	            bottom: 0,
 	            right: 0
 	        },
-	            yAxisPaddingBetweenChart = 10,
-	            yAxisLineWrapLimit = 1,
 	            horizontal = false,
 	            svg = void 0,
 	            valueLabel = 'value',
@@ -16596,34 +16466,6 @@
 	            getValue = function getValue(_ref2) {
 	            var value = _ref2.value;
 	            return value;
-	        },
-	            getLineColor = function getLineColor(_ref3) {
-	            var topic = _ref3.topic;
-	            return colorScale(topic);
-	        },
-	            _percentageLabelHorizontalX = function _percentageLabelHorizontalX(_ref4) {
-	            var value = _ref4.value;
-	            return xScale(value) + percentageLabelMargin;
-	        },
-	            _percentageLabelHorizontalY = function _percentageLabelHorizontalY(_ref5) {
-	            var name = _ref5.name;
-	            return yScale(name) + yScale.bandwidth() / 2 + percentageLabelSize * (3 / 8);
-	        },
-	            _percentageLabelVerticalX = function _percentageLabelVerticalX(_ref6) {
-	            var name = _ref6.name;
-	            return xScale(name);
-	        },
-	            _percentageLabelVerticalY = function _percentageLabelVerticalY(_ref7) {
-	            var value = _ref7.value;
-	            return yScale(value) - percentageLabelMargin;
-	        },
-	            _percentageLabelHorizontalFormatValue = function _percentageLabelHorizontalFormatValue(_ref8) {
-	            var value = _ref8.value;
-	            return d3Format.format(horizontalLabelFormat)(value);
-	        },
-	            _percentageLabelVerticalFormatValue = function _percentageLabelVerticalFormatValue(_ref9) {
-	            var value = _ref9.value;
-	            return d3Format.format(verticalLabelFormat)(parseFloat(value) * 100);
 	        };
 	
 	        /**
@@ -16634,7 +16476,7 @@
 	         */
 	        function exports(_selection) {
 	            _selection.each(function (_data) {
-	                chartWidth = width - margin.left - margin.right - yAxisPaddingBetweenChart * 1.2;
+	                chartWidth = width - margin.left - margin.right;
 	                chartHeight = height - margin.top - margin.bottom;
 	                data = cleanData(_data);
 	
@@ -16644,9 +16486,6 @@
 	                drawGridLines();
 	                drawBars();
 	                drawAxis();
-	                if (enablePercentageLabels) {
-	                    drawPercentageLabels();
-	                }
 	            });
 	        }
 	
@@ -16672,12 +16511,12 @@
 	         * @private
 	         */
 	        function buildContainerGroups() {
-	            var container = svg.append('g').classed('container-group', true).attr('transform', 'translate(' + (margin.left + yAxisPaddingBetweenChart) + ', ' + margin.top + ')');
+	            var container = svg.append('g').classed('container-group', true).attr('transform', 'translate(' + margin.left + ', ' + margin.top + ')');
 	
 	            container.append('g').classed('grid-lines-group', true);
 	            container.append('g').classed('chart-group', true);
 	            container.append('g').classed('x-axis-group axis', true);
-	            container.append('g').attr('transform', 'translate(' + -1 * yAxisPaddingBetweenChart + ', 0)').classed('y-axis-group axis', true);
+	            container.append('g').classed('y-axis-group axis', true);
 	            container.append('g').classed('metadata-group', true);
 	        }
 	
@@ -16686,26 +16525,15 @@
 	         * @private
 	         */
 	        function buildScales() {
-	            var percentageAxis = Math.min(percentageAxisToMaxRatio * d3Array.max(data, getValue), 1);
-	
 	            if (!horizontal) {
 	                xScale = d3Scale.scaleBand().domain(data.map(getName)).rangeRound([0, chartWidth]).padding(0.1);
 	
-	                yScale = d3Scale.scaleLinear().domain([0, percentageAxis]).rangeRound([chartHeight, 0]);
+	                yScale = d3Scale.scaleLinear().domain([0, d3Array.max(data, getValue)]).rangeRound([chartHeight, 0]);
 	            } else {
-	                xScale = d3Scale.scaleLinear().domain([0, percentageAxis]).rangeRound([0, chartWidth]);
+	                xScale = d3Scale.scaleLinear().domain([0, d3Array.max(data, getValue)]).rangeRound([0, chartWidth]);
 	
 	                yScale = d3Scale.scaleBand().domain(data.map(getName)).rangeRound([chartHeight, 0]).padding(0.1);
 	            }
-	            colorScale = d3Scale.scaleOrdinal().range(colorSchema).domain(data.map(function (_, i) {
-	                return i;
-	            }));
-	
-	            var range = colorScale.range();
-	            topicColorMap = colorScale.domain().reduce(function (memo, item, i) {
-	                memo[item] = range[i];
-	                return memo;
-	            }, {});
 	        }
 	
 	        /**
@@ -16738,16 +16566,6 @@
 	        }
 	
 	        /**
-	         * Utility function that wraps a text into the given width
-	         * @param  {D3Selection} text         Text to write
-	         * @param  {Number} containerWidth
-	         * @private
-	         */
-	        function wrapText(text, containerWidth) {
-	            textHelper.wrapTextWithEllipses(text, containerWidth, 0, yAxisLineWrapLimit);
-	        }
-	
-	        /**
 	         * Draws the x and y axis on the svg object within their
 	         * respective groups
 	         * @private
@@ -16756,8 +16574,6 @@
 	            svg.select('.x-axis-group.axis').attr('transform', 'translate(0, ' + chartHeight + ')').call(xAxis);
 	
 	            svg.select('.y-axis-group.axis').call(yAxis);
-	
-	            svg.selectAll('.y-axis-group .tick text').call(wrapText, margin.left - yAxisPaddingBetweenChart);
 	        }
 	
 	        /**
@@ -16767,31 +16583,20 @@
 	         */
 	        function drawHorizontalBars(bars) {
 	            // Enter + Update
-	            bars.enter().append('rect').classed('bar', true).attr('y', chartHeight).attr('x', 0).attr('height', yScale.bandwidth()).attr('width', function (_ref10) {
-	                var value = _ref10.value;
+	            bars.enter().append('rect').classed('bar', true).attr('y', chartHeight).attr('x', 0).attr('height', yScale.bandwidth()).attr('width', function (_ref3) {
+	                var value = _ref3.value;
 	                return xScale(value);
-	            }).attr('fill', function (_ref11) {
-	                var name = _ref11.name;
-	                return colorScale(name);
 	            }).on('mouseover', function () {
 	                dispatcher.call('customMouseOver', this);
-	                d3Selection.select(this).attr('fill', function (_ref12) {
-	                    var name = _ref12.name;
-	                    return d3Color.color(colorScale(name)).darker();
-	                });
 	            }).on('mousemove', function (d) {
 	                dispatcher.call('customMouseMove', this, d, d3Selection.mouse(this), [chartWidth, chartHeight]);
 	            }).on('mouseout', function () {
 	                dispatcher.call('customMouseOut', this);
-	                d3Selection.select(this).attr('fill', function (_ref13) {
-	                    var name = _ref13.name;
-	                    return colorScale(name);
-	                });
-	            }).merge(bars).attr('x', 0).attr('y', function (_ref14) {
-	                var name = _ref14.name;
+	            }).merge(bars).attr('x', 0).attr('y', function (_ref4) {
+	                var name = _ref4.name;
 	                return yScale(name);
-	            }).attr('height', yScale.bandwidth()).attr('width', function (_ref15) {
-	                var value = _ref15.value;
+	            }).attr('height', yScale.bandwidth()).attr('width', function (_ref5) {
+	                var value = _ref5.value;
 	                return xScale(value);
 	            });
 	        }
@@ -16803,54 +16608,28 @@
 	         */
 	        function drawVerticalBars(bars) {
 	            // Enter + Update
-	            bars.enter().append('rect').classed('bar', true).attr('x', chartWidth).attr('y', function (_ref16) {
-	                var value = _ref16.value;
+	            bars.enter().append('rect').classed('bar', true).attr('x', chartWidth).attr('y', function (_ref6) {
+	                var value = _ref6.value;
 	                return yScale(value);
-	            }).attr('width', xScale.bandwidth()).attr('height', function (_ref17) {
-	                var value = _ref17.value;
+	            }).attr('width', xScale.bandwidth()).attr('height', function (_ref7) {
+	                var value = _ref7.value;
 	                return chartHeight - yScale(value);
-	            }).attr('fill', function (_ref18) {
-	                var name = _ref18.name;
-	                return colorScale(name);
 	            }).on('mouseover', function () {
 	                dispatcher.call('customMouseOver', this);
-	                d3Selection.select(this).attr('fill', function (_ref19) {
-	                    var name = _ref19.name;
-	                    return d3Color.color(colorScale(name)).darker();
-	                });
 	            }).on('mousemove', function (d) {
 	                dispatcher.call('customMouseMove', this, d, d3Selection.mouse(this), [chartWidth, chartHeight]);
 	            }).on('mouseout', function () {
 	                dispatcher.call('customMouseOut', this);
-	                d3Selection.select(this).attr('fill', function (_ref20) {
-	                    var name = _ref20.name;
-	                    return colorScale(name);
-	                });
-	            }).merge(bars).attr('x', function (_ref21) {
-	                var name = _ref21.name;
+	            }).merge(bars).attr('x', function (_ref8) {
+	                var name = _ref8.name;
 	                return xScale(name);
-	            }).attr('y', function (_ref22) {
-	                var value = _ref22.value;
+	            }).attr('y', function (_ref9) {
+	                var value = _ref9.value;
 	                return yScale(value);
-	            }).attr('width', xScale.bandwidth()).attr('height', function (_ref23) {
-	                var value = _ref23.value;
+	            }).attr('width', xScale.bandwidth()).attr('height', function (_ref10) {
+	                var value = _ref10.value;
 	                return chartHeight - yScale(value);
 	            });
-	        }
-	
-	        /**
-	         * Draws percentage labels at the end of each bar
-	         * @private
-	         * @return {void}
-	         */
-	        function drawPercentageLabels() {
-	            var labelXPosition = horizontal ? _percentageLabelHorizontalX : _percentageLabelVerticalX;
-	            var labelYPosition = horizontal ? _percentageLabelHorizontalY : _percentageLabelVerticalY;
-	            var text = horizontal ? _percentageLabelHorizontalFormatValue : _percentageLabelVerticalFormatValue;
-	
-	            var percentageLabels = svg.select('.metadata-group').append('g').classed('percentage-label-group', true).selectAll('text').data(data.reverse()).enter().append('text');
-	
-	            percentageLabels.classed('percentage-label', true).attr('x', labelXPosition).attr('y', labelYPosition).text(text).attr('font-size', percentageLabelSize + 'px');
 	        }
 	
 	        /**
@@ -16998,195 +16777,12 @@
 	            exportChart.call(exports, svg, filename, title);
 	        };
 	
-	        /**
-	         * Gets or Sets the colorSchema of the chart
-	         * @param  {String[]} _x Desired colorSchema for the graph
-	         * @return { colorSchema | module} Current colorSchema or Chart module to chain calls
-	         * @public
-	         */
-	        exports.colorSchema = function (_x) {
-	            if (!arguments.length) {
-	                return colorSchema;
-	            }
-	            colorSchema = _x;
-	            return this;
-	        };
-	
-	        /**
-	         * Configurable extension of the x axis
-	         * if your max point was 50% you might want to show x axis to 60%, pass 1.2
-	         * @param  {number} _x ratio to max data point to add to the x axis
-	         * @return { ratio | module} Current ratio or Bar Chart module to chain calls
-	         * @public
-	         */
-	        exports.percentageAxisToMaxRatio = function (_x) {
-	            if (!arguments.length) {
-	                return percentageAxisToMaxRatio;
-	            }
-	            percentageAxisToMaxRatio = _x;
-	            return this;
-	        };
-	
-	        /**
-	         * Default 10px. Offset between end of bar and start of the percentage bars
-	         * @param  {number} _x percentage margin offset from end of bar
-	         * @return {number | module}    Currnet offset or Bar Chart module to chain calls
-	         */
-	        exports.percentageLabelMargin = function (_x) {
-	            if (!arguments.length) {
-	                return percentageLabelMargin;
-	            }
-	            percentageLabelMargin = _x;
-	            return this;
-	        };
-	
-	        /**
-	         * Default false. If true, adds percentage labels at the end of the bars
-	         * @param  {Boolean} _x
-	         * @return {Boolean | module}    Current value of enablePercentageLables or Bar Chart module to chain calls
-	         */
-	        exports.enablePercentageLabels = function (_x) {
-	            if (!arguments.length) {
-	                return enablePercentageLabels;
-	            }
-	            enablePercentageLabels = _x;
-	            return this;
-	        };
-	
-	        /**
-	         * Default 10. Space between y axis and chart
-	         * @param  {number} _x space between y axis and chart
-	         * @return {number| module}    Current value of yAxisPaddingBetweenChart or Bar Chart module to chain calls
-	         */
-	        exports.yAxisPaddingBetweenChart = function (_x) {
-	            if (!arguments.length) {
-	                return yAxisPaddingBetweenChart;
-	            }
-	            yAxisPaddingBetweenChart = _x;
-	            return this;
-	        };
-	
 	        return exports;
 	    };
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ },
 /* 40 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
-	
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
-	
-	    var d3Selection = __webpack_require__(4);
-	
-	    var wrapConfig = {
-	        lineHeight: 1.2,
-	        smallTextOffset: 10,
-	        smallTextLineHeightRatio: 0.9,
-	        smallTextRatio: 0.6,
-	        valueClassName: 'value',
-	        labelClassName: 'label'
-	    };
-	
-	    /**
-	     * Wraps a selection of text within the available width
-	     * @param  {Number} fontSize       Size of the base font
-	     * @param  {Number} availableWidth Width of the container where the text needs to wrap on
-	     * @param  {D3Selection} node      SVG text element that contains the text to wrap
-	     *
-	     * REF: http://bl.ocks.org/mbostock/7555321
-	     * More discussions on https://github.com/mbostock/d3/issues/1642
-	     * @return {void}
-	     */
-	    var wrapText = function wrapText(xOffset, fontSize, availableWidth, node, data, i) {
-	        var text = d3Selection.select(node),
-	            words = text.text().split(/\s+/).reverse(),
-	            word = void 0,
-	            line = [],
-	            lineNumber = 0,
-	            smallLineHeight = wrapConfig.lineHeight * wrapConfig.smallTextLineHeightRatio,
-	            y = text.attr('y'),
-	            dy = parseFloat(text.attr('dy')),
-	            smallFontSize = fontSize * wrapConfig.smallTextRatio,
-	            tspan = text.text(null).append('tspan').attr('x', xOffset).attr('y', y - 5).attr('dy', dy + 'em').classed(wrapConfig.valueClassName, true).style('font-size', fontSize + 'px');
-	
-	        tspan.text(words.pop());
-	        tspan = text.append('tspan').classed(wrapConfig.labelClassName, true).attr('x', xOffset).attr('y', y + wrapConfig.smallTextOffset).attr('dy', ++lineNumber * smallLineHeight + dy + 'em').style('font-size', smallFontSize + 'px');
-	
-	        while (word = words.pop()) {
-	            line.push(word);
-	            tspan.text(line.join(' '));
-	            if (tspan.node().getComputedTextLength() > availableWidth - 50) {
-	                line.pop();
-	                tspan.text(line.join(' '));
-	                line = [word];
-	                tspan = text.append('tspan').classed(wrapConfig.labelClassName, true).attr('x', xOffset).attr('y', y + wrapConfig.smallTextOffset).attr('dy', ++lineNumber * smallLineHeight + dy + 'em').text(word).style('font-size', smallFontSize + 'px');
-	            }
-	        }
-	    };
-	
-	    /**
-	     * Wraps a selection of text within the available width, also adds class .adjust-upwards
-	     * to configure a y offset for entries with multiple rows
-	     * @param  {D3Sekectuib} text       d3 text element
-	     * @param  {Number} width           Width of the container where the text needs to wrap on
-	     * @param  {Number} xpos            number passed to determine the x offset
-	     * @param  {Number} limit           number of lines before an ellipses is added and the rest of the text is cut off
-	     *
-	     * REF: http://bl.ocks.org/mbostock/7555321
-	     * More discussions on https://github.com/mbostock/d3/issues/1642
-	     * @return {void}
-	     */
-	    var wrapTextWithEllipses = function wrapTextWithEllipses(text, width) {
-	        var xpos = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-	        var limit = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 2;
-	
-	
-	        text.each(function () {
-	            var words, word, line, lineNumber, lineHeight, y, dy, tspan;
-	
-	            text = d3Selection.select(this);
-	
-	            words = text.text().split(/\s+/).reverse();
-	            line = [];
-	            lineNumber = 0;
-	            lineHeight = 1.2;
-	            y = text.attr('y');
-	            dy = parseFloat(text.attr('dy'));
-	            tspan = text.text(null).append('tspan').attr('x', xpos).attr('y', y).attr('dy', dy + 'em');
-	
-	            while (word = words.pop()) {
-	                line.push(word);
-	                tspan.text(line.join(' '));
-	
-	                if (tspan.node().getComputedTextLength() > width) {
-	                    line.pop();
-	                    tspan.text(line.join(' '));
-	
-	                    if (lineNumber < limit - 1) {
-	                        line = [word];
-	                        tspan = text.append('tspan').attr('x', xpos).attr('y', y).attr('dy', ++lineNumber * lineHeight + dy + 'em').text(word);
-	                        // if we need two lines for the text, move them both up to center them
-	                        text.classed('adjust-upwards', true);
-	                    } else {
-	                        line.push('...');
-	                        tspan.text(line.join(' '));
-	                        break;
-	                    }
-	                }
-	            }
-	        });
-	    };
-	
-	    return {
-	        wrapText: wrapText,
-	        wrapTextWithEllipses: wrapTextWithEllipses
-	    };
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ },
-/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
@@ -17573,7 +17169,7 @@
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ },
-/* 42 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
@@ -17582,8 +17178,8 @@
 	    'use strict';
 	
 	    var _ = __webpack_require__(3),
-	        jsonColors = __webpack_require__(43),
-	        jsonLetters = __webpack_require__(44);
+	        jsonColors = __webpack_require__(42),
+	        jsonLetters = __webpack_require__(43);
 	
 	    function BarDataBuilder(config) {
 	        this.Klass = BarDataBuilder;
@@ -17626,7 +17222,7 @@
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ },
-/* 43 */
+/* 42 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -17636,7 +17232,7 @@
 				"value": 0.08167
 			},
 			{
-				"name": "Opalescent",
+				"name": "Reflecting",
 				"value": 0.0492
 			},
 			{
@@ -17644,7 +17240,7 @@
 				"value": 0.02782
 			},
 			{
-				"name": "Vibrant",
+				"name": "Sunshine",
 				"value": 0.04253
 			},
 			{
@@ -17659,7 +17255,7 @@
 	};
 
 /***/ },
-/* 44 */
+/* 43 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -17772,15 +17368,15 @@
 	};
 
 /***/ },
-/* 45 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var d3Selection = __webpack_require__(4),
 	    PubSub = __webpack_require__(5),
-	    donut = __webpack_require__(46),
-	    legend = __webpack_require__(47),
+	    donut = __webpack_require__(45),
+	    legend = __webpack_require__(48),
 	    dataBuilder = __webpack_require__(49),
 	    colorSelectorHelper = __webpack_require__(37),
 	    dataset = new dataBuilder.DonutDataBuilder().withFivePlusOther().build(),
@@ -17866,7 +17462,7 @@
 	}
 
 /***/ },
-/* 46 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
@@ -17883,7 +17479,7 @@
 	    var d3Transition = __webpack_require__(22);
 	
 	    var exportChart = __webpack_require__(24);
-	    var textHelper = __webpack_require__(40);
+	    var textHelper = __webpack_require__(46);
 	    var colorHelper = __webpack_require__(7);
 	
 	    /**
@@ -18328,306 +17924,78 @@
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ },
-/* 47 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
 	
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
-	    'use strict';
 	
-	    var d3 = __webpack_require__(48);
+	    var d3 = __webpack_require__(47);
 	
-	    var d3Format = __webpack_require__(14);
-	    var d3Scale = __webpack_require__(15);
-	    var d3Selection = __webpack_require__(4);
-	    var d3Transition = __webpack_require__(22);
-	
-	    var colorHelper = __webpack_require__(7);
-	
-	    /**
-	     * @typedef LegendChartData
-	     * @type {Object[]}
-	     * @property {Number} id        Id of the group (required)
-	     * @property {Number} quantity  Quantity of the group (required)
-	     * @property {String} name      Name of the group (required)
-	     *
-	     * @example
-	     * [
-	     *     {
-	     *         id: 1,
-	     *         quantity: 2,
-	     *         name: 'glittering'
-	     *     },
-	     *     {
-	     *         id: 2,
-	     *         quantity: 3,
-	     *         name: 'luminous'
-	     *     }
-	     */
+	    var wrapConfig = {
+	        lineHeight: 1.2,
+	        smallTextOffset: 10,
+	        smallTextLineHeightRatio: 0.9,
+	        smallTextRatio: 0.6,
+	        valueClassName: 'value',
+	        labelClassName: 'label'
+	    };
 	
 	    /**
-	     * @fileOverview Legend Component reusable API class that renders a
-	     * simple and configurable legend element.
+	     * Wraps a selection of text within the available width
+	     * @param  {Number} fontSize       Size of the base font
+	     * @param  {Number} availableWidth Width of the container where the text needs to wrap on
+	     * @param  {D3Selection} node      SVG text element that contains the text to wrap
 	     *
-	     * @example
-	     * var donutChart = donut(),
-	     *     legendBox = legend();
-	     *
-	     * donutChart
-	     *     .externalRadius(500)
-	     *     .internalRadius(200)
-	     *     .on('customMouseOver', function(data) {
-	     *         legendBox.highlight(data.data.id);
-	     *     })
-	     *     .on('customMouseOut', function() {
-	     *         legendBox.clearHighlight();
-	     *     });
-	     *
-	     * d3Selection.select('.css-selector')
-	     *     .datum(dataset)
-	     *     .call(donutChart);
-	     *
-	     * d3Selection.select('.other-css-selector')
-	     *     .datum(dataset)
-	     *     .call(legendBox);
-	     *
-	     * @module Legend
-	     * @tutorial legend
-	     * @exports charts/legend
-	     * @requires d3
+	     * REF: http://bl.ocks.org/mbostock/7555321
+	     * More discussions on https://github.com/mbostock/d3/issues/1642
+	     * @return {void}
 	     */
-	    return function module() {
+	    var wrapText = function wrapText(xOffset, fontSize, availableWidth, node, data, i) {
+	        var text = d3.select(node),
+	            words = text.text().split(/\s+/).reverse(),
+	            word = void 0,
+	            line = [],
+	            lineNumber = 0,
+	            smallLineHeight = wrapConfig.lineHeight * wrapConfig.smallTextLineHeightRatio,
+	            y = text.attr('y'),
+	            dy = parseFloat(text.attr('dy')),
+	            smallFontSize = fontSize * wrapConfig.smallTextRatio,
+	            tspan = text.text(null).append('tspan').attr('x', xOffset).attr('y', y - 5).attr('dy', dy + 'em').classed(wrapConfig.valueClassName, true).style('font-size', fontSize + 'px');
 	
-	        var margin = {
-	            top: 0,
-	            right: 0,
-	            bottom: 0,
-	            left: 0
-	        },
-	            width = 320,
-	            height = 180,
-	            lineMargin = 12,
-	            circleRadius = 8,
-	            circleYOffset = -5,
-	            textSize = 12,
-	            textLetterSpacing = 0.5,
-	            valueReservedSpace = 40,
-	            numberLetterSpacing = 0.8,
-	            numberFormat = d3Format.format('s'),
-	            isFadedClassName = 'is-faded',
+	        tspan.text(words.pop());
+	        tspan = text.append('tspan').classed(wrapConfig.labelClassName, true).attr('x', xOffset).attr('y', y + wrapConfig.smallTextOffset).attr('dy', ++lineNumber * smallLineHeight + dy + 'em').style('font-size', smallFontSize + 'px');
 	
-	
-	        // colors
-	        colorScale = void 0,
-	            colorSchema = colorHelper.colorSchemas.britechartsColorSchema,
-	            getId = function getId(_ref) {
-	            var id = _ref.id;
-	            return id;
-	        },
-	            getName = function getName(_ref2) {
-	            var name = _ref2.name;
-	            return name;
-	        },
-	            getFormattedQuantity = function getFormattedQuantity(_ref3) {
-	            var quantity = _ref3.quantity;
-	            return numberFormat(quantity);
-	        },
-	            entries = void 0,
-	            chartWidth = void 0,
-	            chartHeight = void 0,
-	            data = void 0,
-	            svg = void 0;
-	
-	        /**
-	         * This function creates the graph using the selection as container
-	         * @param  {D3Selection} _selection A d3 selection that represents
-	         *                                  the container(s) where the chart(s) will be rendered
-	         * @param {object} _data The data to attach and generate the chart
-	         */
-	        function exports(_selection) {
-	            _selection.each(function (_data) {
-	                chartWidth = width - margin.left - margin.right;
-	                chartHeight = height - margin.top - margin.bottom;
-	                data = _data;
-	
-	                buildColorScale();
-	                buildSVG(this);
-	                drawEntries();
-	            });
-	        }
-	
-	        /**
-	         * Builds containers for the legend
-	         * Also applies the Margin convention
-	         * @private
-	         */
-	        function buildContainerGroups() {
-	            var container = svg.append('g').classed('legend-container-group', true).attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
-	
-	            container.append('g').classed('legend-group', true);
-	        }
-	
-	        /**
-	         * Builds color scale for chart, if any colorSchema was defined
-	         * @private
-	         */
-	        function buildColorScale() {
-	            colorScale = d3Scale.scaleOrdinal().range(colorSchema);
-	        }
-	
-	        /**
-	         * Builds the SVG element that will contain the chart
-	         * @param  {HTMLElement} container DOM element that will work as the container of the graph
-	         * @private
-	         */
-	        function buildSVG(container) {
-	            if (!svg) {
-	                svg = d3Selection.select(container).append('svg').classed('britechart britechart-legend', true);
-	
-	                buildContainerGroups();
+	        while (word = words.pop()) {
+	            line.push(word);
+	            tspan.text(line.join(' '));
+	            if (tspan.node().getComputedTextLength() > availableWidth - 50) {
+	                line.pop();
+	                tspan.text(line.join(' '));
+	                line = [word];
+	                tspan = text.append('tspan').classed(wrapConfig.labelClassName, true).attr('x', xOffset).attr('y', y + wrapConfig.smallTextOffset).attr('dy', ++lineNumber * smallLineHeight + dy + 'em').text(word).style('font-size', smallFontSize + 'px');
 	            }
-	
-	            svg.transition().attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom);
 	        }
+	    };
 	
-	        /**
-	         * Removes the faded class from all the entry lines
-	         */
-	        function cleanFadedLines() {
-	            svg.select('.legend-group').selectAll('g.legend-line').classed(isFadedClassName, false);
-	        }
-	
-	        /**
-	         * Draws the entries of the legend
-	         * @private
-	         */
-	        function drawEntries() {
-	            entries = svg.select('.legend-group').selectAll('g.legend-line').data(data);
-	
-	            // Enter
-	            entries.enter().append('g').classed('legend-line', true).attr('data-item', getId).attr('transform', function (d, i) {
-	                var horizontalOffset = 2 * circleRadius + 10,
-	                    lineHeight = chartHeight / (data.length + 1),
-	                    verticalOffset = (i + 1) * lineHeight;
-	
-	                return 'translate(' + horizontalOffset + ',' + verticalOffset + ')';
-	            }).merge(entries).append('circle').classed('legend-circle', true).attr('cx', 0).attr('cy', circleYOffset).attr('r', circleRadius).style('fill', function (_ref4) {
-	                var quantity = _ref4.quantity;
-	
-	                return colorScale(quantity);
-	            }).style('stroke-width', 1);
-	
-	            svg.select('.legend-group').selectAll('g.legend-line').append('text').classed('legend-entry-name', true).text(getName).attr('x', 2 * circleRadius + lineMargin).style('font-size', textSize + 'px').style('letter-spacing', textLetterSpacing + 'px');
-	
-	            svg.select('.legend-group').selectAll('g.legend-line').append('text').classed('legend-entry-value', true).text(getFormattedQuantity).attr('x', chartWidth - valueReservedSpace).style('font-size', textSize + 'px').style('letter-spacing', numberLetterSpacing + 'px').style('text-anchor', 'end').style('startOffset', '100%');
-	
-	            // Exit
-	            svg.select('.legend-group').selectAll('g.legend-line').exit().transition().style('opacity', 0).remove();
-	        }
-	
-	        /**
-	         * Applies the faded class to all lines but the one that has the given id
-	         * @param  {number} exceptionItemId Id of the line that needs to stay the same
-	         */
-	        function fadeLinesBut(exceptionItemId) {
-	            svg.select('.legend-group').selectAll('g.legend-line').classed(isFadedClassName, true);
-	
-	            d3Selection.select('[data-item="' + exceptionItemId + '"]').classed(isFadedClassName, false);
-	        }
-	
-	        /**
-	         * Clears the highlighted line entry
-	         */
-	        exports.clearHighlight = function () {
-	            cleanFadedLines();
-	        };
-	
-	        /**
-	         * Gets or Sets the colorSchema of the chart
-	         * @param  {Array} _x Color scheme array to get/set
-	         * @return { (Number | Module) } Current colorSchema or Donut Chart module to chain calls
-	         * @public
-	         */
-	        exports.colorSchema = function (_x) {
-	            if (!arguments.length) {
-	                return colorSchema;
-	            }
-	            colorSchema = _x;
-	
-	            return this;
-	        };
-	
-	        /**
-	         * Gets or Sets the height of the legend chart
-	         * @param  {number} _x Desired width for the chart
-	         * @return { height | module} Current height or Legend module to chain calls
-	         * @public
-	         */
-	        exports.height = function (_x) {
-	            if (!arguments.length) {
-	                return height;
-	            }
-	            height = _x;
-	
-	            return this;
-	        };
-	
-	        /**
-	         * Highlights a line entry by fading the rest of lines
-	         * @param  {number} entryId ID of the entry line
-	         */
-	        exports.highlight = function (entryId) {
-	            cleanFadedLines();
-	            fadeLinesBut(entryId);
-	        };
-	
-	        /**
-	         * Gets or Sets the margin of the legend chart
-	         * @param  {object} _x Margin object to get/set
-	         * @return { margin | module} Current margin or Legend module to chain calls
-	         * @public
-	         */
-	        exports.margin = function (_x) {
-	            if (!arguments.length) {
-	                return margin;
-	            }
-	            margin = _x;
-	
-	            return this;
-	        };
-	
-	        /**
-	         * Gets or Sets the width of the legend chart
-	         * @param  {number} _x Desired width for the graph
-	         * @return { width | module} Current width or Legend module to chain calls
-	         * @public
-	         */
-	        exports.width = function (_x) {
-	            if (!arguments.length) {
-	                return width;
-	            }
-	            width = _x;
-	
-	            return this;
-	        };
-	
-	        return exports;
+	    return {
+	        wrapText: wrapText
 	    };
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ },
-/* 48 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// https://d3js.org Version 4.6.0. Copyright 2017 Mike Bostock.
+	// https://d3js.org Version 4.4.2. Copyright 2017 Mike Bostock.
 	(function (global, factory) {
 		 true ? factory(exports) :
 		typeof define === 'function' && define.amd ? define(['exports'], factory) :
 		(factory((global.d3 = global.d3 || {})));
 	}(this, (function (exports) { 'use strict';
 	
-	var version = "4.6.0";
+	var version = "4.4.2";
 	
 	var ascending = function(a, b) {
 	  return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
@@ -21581,7 +20949,7 @@
 	    if (time < Infinity) timeout = setTimeout(wake, delay);
 	    if (interval) interval = clearInterval(interval);
 	  } else {
-	    if (!interval) clockLast = clockNow, interval = setInterval(poke, pokeDelay);
+	    if (!interval) interval = setInterval(poke, pokeDelay);
 	    frame = 1, setFrame(wake);
 	  }
 	}
@@ -25496,10 +24864,8 @@
 	      }
 	    }
 	  } else {
-	    ranges.push(range = [lambda0$1 = lambda, lambda1 = lambda]);
+	    boundsPoint(lambda, phi);
 	  }
-	  if (phi < phi0) phi0 = phi;
-	  if (phi > phi1) phi1 = phi;
 	  p0 = p, lambda2 = lambda;
 	}
 	
@@ -25699,7 +25065,7 @@
 	      cz = x0 * y - y0 * x,
 	      m = sqrt(cx * cx + cy * cy + cz * cz),
 	      u = x0 * x + y0 * y + z0 * z,
-	      v = m && -asin(m) / m, // area weight
+	      v = m && -acos(u) / m, // area weight
 	      w = atan2(m, u); // line weight
 	  X2 += v * cx;
 	  Y2 += v * cy;
@@ -26677,46 +26043,6 @@
 	  result: noop$1
 	};
 	
-	var lengthSum$1 = adder();
-	var lengthRing;
-	var x00$2;
-	var y00$2;
-	var x0$4;
-	var y0$4;
-	
-	var lengthStream$1 = {
-	  point: noop$1,
-	  lineStart: function() {
-	    lengthStream$1.point = lengthPointFirst$1;
-	  },
-	  lineEnd: function() {
-	    if (lengthRing) lengthPoint$1(x00$2, y00$2);
-	    lengthStream$1.point = noop$1;
-	  },
-	  polygonStart: function() {
-	    lengthRing = true;
-	  },
-	  polygonEnd: function() {
-	    lengthRing = null;
-	  },
-	  result: function() {
-	    var length = +lengthSum$1;
-	    lengthSum$1.reset();
-	    return length;
-	  }
-	};
-	
-	function lengthPointFirst$1(x, y) {
-	  lengthStream$1.point = lengthPoint$1;
-	  x00$2 = x0$4 = x, y00$2 = y0$4 = y;
-	}
-	
-	function lengthPoint$1(x, y) {
-	  x0$4 -= x, y0$4 -= y;
-	  lengthSum$1.add(sqrt(x0$4 * x0$4 + y0$4 * y0$4));
-	  x0$4 = x, y0$4 = y;
-	}
-	
 	function PathString() {
 	  this._string = [];
 	}
@@ -26788,11 +26114,6 @@
 	  path.area = function(object) {
 	    geoStream(object, projectionStream(areaStream$1));
 	    return areaStream$1.result();
-	  };
-	
-	  path.measure = function(object) {
-	    geoStream(object, projectionStream(lengthStream$1));
-	    return lengthStream$1.result();
 	  };
 	
 	  path.bounds = function(object) {
@@ -28061,19 +27382,6 @@
 	  return cluster;
 	};
 	
-	function count(node) {
-	  var sum = 0,
-	      children = node.children,
-	      i = children && children.length;
-	  if (!i) sum = 1;
-	  else while (--i >= 0) sum += children[i].value;
-	  node.value = sum;
-	}
-	
-	var node_count = function() {
-	  return this.eachAfter(count);
-	};
-	
 	var node_each = function(callback) {
 	  var node = this, current, next = [node], children, i, n;
 	  do {
@@ -28252,7 +27560,6 @@
 	
 	Node.prototype = hierarchy.prototype = {
 	  constructor: Node,
-	  count: node_count,
 	  each: node_each,
 	  eachAfter: node_eachAfter,
 	  eachBefore: node_eachBefore,
@@ -28413,21 +27720,12 @@
 	  var dx = b.x - a.x,
 	      dy = b.y - a.y,
 	      dr = a.r + b.r;
-	  return dr * dr - 1e-6 > dx * dx + dy * dy;
+	  return dr * dr > dx * dx + dy * dy;
 	}
 	
-	function distance1(a, b) {
-	  var l = a._.r;
-	  while (a !== b) l += 2 * (a = a.next)._.r;
-	  return l - b._.r;
-	}
-	
-	function distance2(node, x, y) {
-	  var a = node._,
-	      b = node.next._,
-	      ab = a.r + b.r,
-	      dx = (a.x * b.r + b.x * a.r) / ab - x,
-	      dy = (a.y * b.r + b.y * a.r) / ab - y;
+	function distance2(circle, x, y) {
+	  var dx = circle.x - x,
+	      dy = circle.y - y;
 	  return dx * dx + dy * dy;
 	}
 	
@@ -28472,27 +27770,35 @@
 	  pack: for (i = 3; i < n; ++i) {
 	    place(a._, b._, c = circles[i]), c = new Node$1(c);
 	
-	    // Find the closest intersecting circle on the front-chain, if any.
-	    // “Closeness” is determined by linear distance along the front-chain.
-	    // “Ahead” or “behind” is likewise determined by linear distance.
-	    j = b.next, k = a.previous, sj = b._.r, sk = a._.r;
-	    do {
-	      if (sj <= sk) {
-	        if (intersects(j._, c._)) {
-	          if (sj + a._.r + b._.r > distance1(j, b)) a = j; else b = j;
-	          a.next = b, b.previous = a, --i;
-	          continue pack;
-	        }
-	        sj += j._.r, j = j.next;
-	      } else {
-	        if (intersects(k._, c._)) {
-	          if (distance1(a, k) > sk + a._.r + b._.r) a = k; else b = k;
-	          a.next = b, b.previous = a, --i;
-	          continue pack;
-	        }
-	        sk += k._.r, k = k.previous;
+	    // If there are only three elements in the front-chain…
+	    if ((k = a.previous) === (j = b.next)) {
+	      // If the new circle intersects the third circle,
+	      // rotate the front chain to try the next position.
+	      if (intersects(j._, c._)) {
+	        a = b, b = j, --i;
+	        continue pack;
 	      }
-	    } while (j !== k.next);
+	    }
+	
+	    // Find the closest intersecting circle on the front-chain, if any.
+	    else {
+	      sj = j._.r, sk = k._.r;
+	      do {
+	        if (sj <= sk) {
+	          if (intersects(j._, c._)) {
+	            b = j, a.next = b, b.previous = a, --i;
+	            continue pack;
+	          }
+	          j = j.next, sj += j._.r;
+	        } else {
+	          if (intersects(k._, c._)) {
+	            a = k, a.next = b, b.previous = a, --i;
+	            continue pack;
+	          }
+	          k = k.previous, sk += k._.r;
+	        }
+	      } while (j !== k.next);
+	    }
 	
 	    // Success! Insert the new circle c between a and b.
 	    c.previous = a, c.next = b, a.next = b.previous = b = c;
@@ -28502,10 +27808,10 @@
 	    ox += ca * c._.x;
 	    oy += ca * c._.y;
 	
-	    // Compute the new closest circle pair to the centroid.
-	    aa = distance2(a, cx = ox / oa, cy = oy / oa);
+	    // Compute the new closest circle a to centroid.
+	    aa = distance2(a._, cx = ox / oa, cy = oy / oa);
 	    while ((c = c.next) !== b) {
-	      if ((ca = distance2(c, cx, cy)) < aa) {
+	      if ((ca = distance2(c._, cx, cy)) < aa) {
 	        a = c, aa = ca;
 	      }
 	    }
@@ -35078,6 +34384,295 @@
 
 
 /***/ },
+/* 48 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
+	
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
+	    'use strict';
+	
+	    var d3 = __webpack_require__(47);
+	
+	    var d3Format = __webpack_require__(14);
+	    var d3Scale = __webpack_require__(15);
+	    var d3Selection = __webpack_require__(4);
+	    var d3Transition = __webpack_require__(22);
+	
+	    var colorHelper = __webpack_require__(7);
+	
+	    /**
+	     * @typedef LegendChartData
+	     * @type {Object[]}
+	     * @property {Number} id        Id of the group (required)
+	     * @property {Number} quantity  Quantity of the group (required)
+	     * @property {String} name      Name of the group (required)
+	     *
+	     * @example
+	     * [
+	     *     {
+	     *         id: 1,
+	     *         quantity: 2,
+	     *         name: 'glittering'
+	     *     },
+	     *     {
+	     *         id: 2,
+	     *         quantity: 3,
+	     *         name: 'luminous'
+	     *     }
+	     */
+	
+	    /**
+	     * @fileOverview Legend Component reusable API class that renders a
+	     * simple and configurable legend element.
+	     *
+	     * @example
+	     * var donutChart = donut(),
+	     *     legendBox = legend();
+	     *
+	     * donutChart
+	     *     .externalRadius(500)
+	     *     .internalRadius(200)
+	     *     .on('customMouseOver', function(data) {
+	     *         legendBox.highlight(data.data.id);
+	     *     })
+	     *     .on('customMouseOut', function() {
+	     *         legendBox.clearHighlight();
+	     *     });
+	     *
+	     * d3Selection.select('.css-selector')
+	     *     .datum(dataset)
+	     *     .call(donutChart);
+	     *
+	     * d3Selection.select('.other-css-selector')
+	     *     .datum(dataset)
+	     *     .call(legendBox);
+	     *
+	     * @module Legend
+	     * @tutorial legend
+	     * @exports charts/legend
+	     * @requires d3
+	     */
+	    return function module() {
+	
+	        var margin = {
+	            top: 0,
+	            right: 0,
+	            bottom: 0,
+	            left: 0
+	        },
+	            width = 320,
+	            height = 180,
+	            lineMargin = 12,
+	            circleRadius = 8,
+	            circleYOffset = -5,
+	            textSize = 12,
+	            textLetterSpacing = 0.5,
+	            valueReservedSpace = 40,
+	            numberLetterSpacing = 0.8,
+	            numberFormat = d3Format.format('s'),
+	            isFadedClassName = 'is-faded',
+	
+	
+	        // colors
+	        colorScale = void 0,
+	            colorSchema = colorHelper.colorSchemas.britechartsColorSchema,
+	            getId = function getId(_ref) {
+	            var id = _ref.id;
+	            return id;
+	        },
+	            getName = function getName(_ref2) {
+	            var name = _ref2.name;
+	            return name;
+	        },
+	            getFormattedQuantity = function getFormattedQuantity(_ref3) {
+	            var quantity = _ref3.quantity;
+	            return numberFormat(quantity);
+	        },
+	            entries = void 0,
+	            chartWidth = void 0,
+	            chartHeight = void 0,
+	            data = void 0,
+	            svg = void 0;
+	
+	        /**
+	         * This function creates the graph using the selection as container
+	         * @param  {D3Selection} _selection A d3 selection that represents
+	         *                                  the container(s) where the chart(s) will be rendered
+	         * @param {object} _data The data to attach and generate the chart
+	         */
+	        function exports(_selection) {
+	            _selection.each(function (_data) {
+	                chartWidth = width - margin.left - margin.right;
+	                chartHeight = height - margin.top - margin.bottom;
+	                data = _data;
+	
+	                buildColorScale();
+	                buildSVG(this);
+	                drawEntries();
+	            });
+	        }
+	
+	        /**
+	         * Builds containers for the legend
+	         * Also applies the Margin convention
+	         * @private
+	         */
+	        function buildContainerGroups() {
+	            var container = svg.append('g').classed('legend-container-group', true).attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	
+	            container.append('g').classed('legend-group', true);
+	        }
+	
+	        /**
+	         * Builds color scale for chart, if any colorSchema was defined
+	         * @private
+	         */
+	        function buildColorScale() {
+	            colorScale = d3Scale.scaleOrdinal().range(colorSchema);
+	        }
+	
+	        /**
+	         * Builds the SVG element that will contain the chart
+	         * @param  {HTMLElement} container DOM element that will work as the container of the graph
+	         * @private
+	         */
+	        function buildSVG(container) {
+	            if (!svg) {
+	                svg = d3Selection.select(container).append('svg').classed('britechart britechart-legend', true);
+	
+	                buildContainerGroups();
+	            }
+	
+	            svg.transition().attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom);
+	        }
+	
+	        /**
+	         * Removes the faded class from all the entry lines
+	         */
+	        function cleanFadedLines() {
+	            svg.select('.legend-group').selectAll('g.legend-line').classed(isFadedClassName, false);
+	        }
+	
+	        /**
+	         * Draws the entries of the legend
+	         * @private
+	         */
+	        function drawEntries() {
+	            entries = svg.select('.legend-group').selectAll('g.legend-line').data(data);
+	
+	            // Enter
+	            entries.enter().append('g').classed('legend-line', true).attr('data-item', getId).attr('transform', function (d, i) {
+	                var horizontalOffset = 2 * circleRadius + 10,
+	                    lineHeight = chartHeight / (data.length + 1),
+	                    verticalOffset = (i + 1) * lineHeight;
+	
+	                return 'translate(' + horizontalOffset + ',' + verticalOffset + ')';
+	            }).merge(entries).append('circle').classed('legend-circle', true).attr('cx', 0).attr('cy', circleYOffset).attr('r', circleRadius).style('fill', function (_ref4) {
+	                var quantity = _ref4.quantity;
+	
+	                return colorScale(quantity);
+	            }).style('stroke-width', 1);
+	
+	            svg.select('.legend-group').selectAll('g.legend-line').append('text').classed('legend-entry-name', true).text(getName).attr('x', 2 * circleRadius + lineMargin).style('font-size', textSize + 'px').style('letter-spacing', textLetterSpacing + 'px');
+	
+	            svg.select('.legend-group').selectAll('g.legend-line').append('text').classed('legend-entry-value', true).text(getFormattedQuantity).attr('x', chartWidth - valueReservedSpace).style('font-size', textSize + 'px').style('letter-spacing', numberLetterSpacing + 'px').style('text-anchor', 'end').style('startOffset', '100%');
+	
+	            // Exit
+	            svg.select('.legend-group').selectAll('g.legend-line').exit().transition().style('opacity', 0).remove();
+	        }
+	
+	        /**
+	         * Applies the faded class to all lines but the one that has the given id
+	         * @param  {number} exceptionItemId Id of the line that needs to stay the same
+	         */
+	        function fadeLinesBut(exceptionItemId) {
+	            svg.select('.legend-group').selectAll('g.legend-line').classed(isFadedClassName, true);
+	
+	            d3Selection.select('[data-item="' + exceptionItemId + '"]').classed(isFadedClassName, false);
+	        }
+	
+	        /**
+	         * Clears the highlighted line entry
+	         */
+	        exports.clearHighlight = function () {
+	            cleanFadedLines();
+	        };
+	
+	        /**
+	         * Gets or Sets the colorSchema of the chart
+	         * @param  {Array} _x Color scheme array to get/set
+	         * @return { (Number | Module) } Current colorSchema or Donut Chart module to chain calls
+	         * @public
+	         */
+	        exports.colorSchema = function (_x) {
+	            if (!arguments.length) {
+	                return colorSchema;
+	            }
+	            colorSchema = _x;
+	
+	            return this;
+	        };
+	
+	        /**
+	         * Gets or Sets the height of the legend chart
+	         * @param  {number} _x Desired width for the chart
+	         * @return { height | module} Current height or Legend module to chain calls
+	         * @public
+	         */
+	        exports.height = function (_x) {
+	            if (!arguments.length) {
+	                return height;
+	            }
+	            height = _x;
+	
+	            return this;
+	        };
+	
+	        /**
+	         * Highlights a line entry by fading the rest of lines
+	         * @param  {number} entryId ID of the entry line
+	         */
+	        exports.highlight = function (entryId) {
+	            cleanFadedLines();
+	            fadeLinesBut(entryId);
+	        };
+	
+	        /**
+	         * Gets or Sets the margin of the legend chart
+	         * @param  {object} _x Margin object to get/set
+	         * @return { margin | module} Current margin or Legend module to chain calls
+	         * @public
+	         */
+	        exports.margin = function (_x) {
+	            if (!arguments.length) {
+	                return margin;
+	            }
+	            margin = _x;
+	
+	            return this;
+	        };
+	
+	        /**
+	         * Gets or Sets the width of the legend chart
+	         * @param  {number} _x Desired width for the graph
+	         * @return { width | module} Current width or Legend module to chain calls
+	         * @public
+	         */
+	        exports.width = function (_x) {
+	            if (!arguments.length) {
+	                return width;
+	            }
+	            width = _x;
+	
+	            return this;
+	        };
+	
+	        return exports;
+	    };
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ },
 /* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -35327,7 +34922,6 @@
 	
 	    var d3Array = __webpack_require__(9);
 	    var d3Axis = __webpack_require__(10);
-	    var d3Collection = __webpack_require__(11);
 	    var d3Dispatch = __webpack_require__(12);
 	    var d3Ease = __webpack_require__(13);
 	    var d3Format = __webpack_require__(14);
@@ -35338,7 +34932,6 @@
 	    var d3TimeFormat = __webpack_require__(19);
 	    var d3Transition = __webpack_require__(22);
 	
-	    var _ = __webpack_require__(3);
 	    var colorHelper = __webpack_require__(7);
 	    var exportChart = __webpack_require__(24);
 	
@@ -35355,23 +34948,49 @@
 	     */
 	
 	    /**
-	     * @typedef lineChartDataByTopic
+	     * @typedef lineChartPointByTopic
 	     * @type {Object}
-	     * @property {String} topicName    Topic name (required)
+	     * @property {Object[]} Data       All data entries for a given topic (required)
 	     * @property {Number} topic        Topic identifier (required)
-	     * @property {Object[]} dates      All date entries with values for that topic (required)
+	     * @property {String} topicName    Topic name (required)
 	     *
 	     * @example
 	     * {
-	     *     topicName: 'San Francisco',
-	     *     topic: 123,
-	     *     dates: [
+	     *     Data: [
 	     *         {
-	     *             date: '2017-01-16T16:00:00-08:00',
+	     *             date: '',
+	     *             fullDate: '2017-01-16T16:00:00-08:00',
 	     *             value: 1
 	     *         },
 	     *         {
-	     *             date: '2017-01-16T17:00:00-08:00',
+	     *             date: '',
+	     *             fullDate: '2017-01-16T17:00:00-08:00',
+	     *             value: 2
+	     *         }
+	     *     ],
+	     *     topic: 123,
+	     *     topicName: 'San Francisco'
+	     * }
+	     */
+	
+	    /**
+	     * @typedef lineChartPointByDate
+	     * @type {Object}
+	     * @property {Date} date               Date value (required)
+	     * @property {Object[]} topics         Data entries for that day (required)
+	     *
+	     * @example
+	     * {
+	     *     date: '2017-01-16T16:00:00-08:00'
+	     *     topics: [
+	     *         {
+	     *             name: 123,
+	     *             topicName: 'San Francisco',
+	     *             value: 1
+	     *         },
+	     *         {
+	     *             name: 345,
+	     *             topicName: 'Other',
 	     *             value: 2
 	     *         }
 	     *     ]
@@ -35381,33 +35000,54 @@
 	    /**
 	     * @typedef LineChartData
 	     * @type {Object[]}
-	     * @property {lineChartDataByTopic[]} dataByTopic  Data values to chart (required)
+	     * @property {lineChartPointByTopic[]} data                   Data values to chart (required)
+	     * @property {lineChartPointByDate[]} dataByDate    Data values to chart ordered by date (required)
 	     *
 	     * @example
 	     * {
-	     *     dataByTopic: [
+	     *     data: [
 	     *         {
-	     *             topicName: 'San Francisco',
-	     *             topic: 123,
-	     *             dates: [
+	     *             Data: [
 	     *                 {
-	     *                     date: '2017-01-16T16:00:00-08:00',
+	     *                     date: '',
+	     *                     fullDate: '2017-01-16T16:00:00-08:00',
 	     *                     value: 1
 	     *                 },
 	     *                 {
-	     *                     date: '2017-01-16T17:00:00-08:00',
+	     *                     date: '',
+	     *                     fullDate: '2017-01-16T17:00:00-08:00',
+	     *                     value: 2
+	     *                 }
+	     *             ],
+	     *             topic: 123,
+	     *             topicName: 'San Francisco'
+	     *         },
+	     *         {
+	     *             Data: [
+	     *                 {...},
+	     *                 {...}
+	     *             ],
+	     *             topic: 345,
+	     *             topicName: 'Other'
+	     *         }
+	     *     ],
+	     *     dataByDate: [
+	     *         {
+	     *             date: '2017-01-16T16:00:00-08:00',
+	     *             topics: [
+	     *                 {
+	     *                     name: 123,
+	     *                     topicName: 'San Francisco',
+	     *                     value: 1
+	     *                 },
+	     *                 {
+	     *                     name: 345,
+	     *                     topicName: 'Other',
 	     *                     value: 2
 	     *                 }
 	     *             ]
 	     *         },
-	     *         {
-	     *             topicName: 'Other',
-	     *             topic: 345,
-	     *             dates: [
-	     *                 {...},
-	     *                 {...}
-	     *             ]
-	     *         }
+	     *         {...}
 	     *     ]
 	     * }
 	     */
@@ -35471,12 +35111,8 @@
 	            horizontalTickSpacing = 40,
 	            ease = d3Ease.easeQuadInOut,
 	            animationDuration = 1500,
-	            dataByTopic = void 0,
+	            data = void 0,
 	            dataByDate = void 0,
-	            dateLabel = 'date',
-	            valueLabel = 'value',
-	            topicLabel = 'topic',
-	            topicNameLabel = 'topicName',
 	            numVerticalTics = 5,
 	            defaultNumMonths = 10,
 	            overlay = void 0,
@@ -35534,7 +35170,7 @@
 	            _selection.each(function (_data) {
 	                var _cleanData = cleanData(_data);
 	
-	                dataByTopic = _cleanData.dataByTopic;
+	                data = _cleanData.data;
 	                dataByDate = _cleanData.dataByDate;
 	
 	
@@ -35674,28 +35310,28 @@
 	         * @private
 	         */
 	        function buildScales() {
-	            var minX = d3Array.min(dataByTopic, function (_ref7) {
-	                var dates = _ref7.dates;
-	                return d3Array.min(dates, getDate);
+	            var minX = d3Array.min(data, function (_ref7) {
+	                var Data = _ref7.Data;
+	                return d3Array.min(Data, getDate);
 	            }),
-	                maxX = d3Array.max(dataByTopic, function (_ref8) {
-	                var dates = _ref8.dates;
-	                return d3Array.max(dates, getDate);
+	                maxX = d3Array.max(data, function (_ref8) {
+	                var Data = _ref8.Data;
+	                return d3Array.max(Data, getDate);
 	            }),
-	                minY = d3Array.min(dataByTopic, function (_ref9) {
-	                var dates = _ref9.dates;
-	                return d3Array.min(dates, getValue);
+	                minY = d3Array.min(data, function (_ref9) {
+	                var Data = _ref9.Data;
+	                return d3Array.min(Data, getValue);
 	            }),
-	                maxY = d3Array.max(dataByTopic, function (_ref10) {
-	                var dates = _ref10.dates;
-	                return d3Array.max(dates, getValue);
+	                maxY = d3Array.max(data, function (_ref10) {
+	                var Data = _ref10.Data;
+	                return d3Array.max(Data, getValue);
 	            });
 	
 	            xScale = d3Scale.scaleTime().rangeRound([0, chartWidth]).domain([minX, maxX]);
 	
 	            yScale = d3Scale.scaleLinear().rangeRound([chartHeight, 0]).domain([Math.abs(minY), Math.abs(maxY)]).nice(3);
 	
-	            colorScale = d3Scale.scaleOrdinal().range(colorSchema).domain(dataByTopic.map(getTopic));
+	            colorScale = d3Scale.scaleOrdinal().range(colorSchema).domain(data.map(getTopic));
 	
 	            // TODO add spread and rest operators to britecharts
 	            /*
@@ -35728,53 +35364,25 @@
 	
 	        /**
 	         * Parses dates and values into JS Date objects and numbers
-	         * @param  {obj} dataByTopic    Raw data grouped by topic
-	         * @return {obj}                Parsed data with dataByTopic and dataByDate
+	         * @param  {obj} data           Raw data
+	         * @param  {obj} dataByDate     Raw data ordered by date
+	         * @return {obj}            Parsed data with dates
 	         */
 	        function cleanData(_ref11) {
-	            var dataByTopic = _ref11.dataByTopic,
+	            var data = _ref11.data,
 	                dataByDate = _ref11.dataByDate;
 	
-	
-	            if (dataByTopic) {
-	                var flatData = [];
-	
-	                dataByTopic.forEach(function (topic) {
-	                    topic.dates.forEach(function (date) {
-	                        flatData.push({
-	                            topicName: topic[topicNameLabel],
-	                            name: topic[topicLabel],
-	                            date: date[dateLabel],
-	                            value: date[valueLabel]
-	                        });
-	                    });
+	            data.forEach(function (kv) {
+	                kv.Data.forEach(function (d) {
+	                    d.date = new Date(d.fullDate);
 	                });
+	            });
 	
-	                // Nest data by date and format
-	                dataByDate = d3Collection.nest().key(getDate).entries(flatData).map(function (d) {
-	                    return {
-	                        date: new Date(d.key),
-	                        topics: d.values
-	                    };
-	                });
+	            dataByDate.forEach(function (entry) {
+	                return entry.date = new Date(entry.date);
+	            });
 	
-	                // Normalize dates in keys
-	                dataByDate = dataByDate.map(function (d) {
-	                    d.date = new Date(d.date);
-	
-	                    return d;
-	                });
-	
-	                // Normalize dataByTopic
-	                dataByTopic.forEach(function (kv) {
-	                    kv.dates.forEach(function (d) {
-	                        d.date = new Date(d[dateLabel]);
-	                        d.value = +d[valueLabel];
-	                    });
-	                });
-	            }
-	
-	            return { dataByTopic: dataByTopic, dataByDate: dataByDate };
+	            return { data: data, dataByDate: dataByDate };
 	        }
 	
 	        /**
@@ -35815,13 +35423,13 @@
 	                return yScale(value);
 	            });
 	
-	            lines = svg.select('.chart-group').selectAll('.line').data(dataByTopic);
+	            lines = svg.select('.chart-group').selectAll('.line').data(data);
 	
 	            lines.enter().append('g').attr('class', 'topic').append('path').attr('class', 'line').attr('d', function (_ref14) {
-	                var dates = _ref14.dates;
-	                return topicLine(dates);
+	                var Data = _ref14.Data;
+	                return topicLine(Data);
 	            }).style('stroke', function (d) {
-	                return dataByTopic.length === 1 ? 'url(#' + lineGradientId + ')' : getLineColor(d);
+	                return data.length === 1 ? 'url(#' + lineGradientId + ')' : getLineColor(d);
 	            });
 	
 	            lines.exit().remove();
@@ -36050,20 +35658,6 @@
 	        };
 	
 	        /**
-	         * Gets or Sets the dateLabel of the chart
-	         * @param  {Number} _x Desired dateLabel for the graph
-	         * @return { dateLabel | module} Current dateLabel or Chart module to chain calls
-	         * @public
-	         */
-	        exports.dateLabel = function (_x) {
-	            if (!arguments.length) {
-	                return dateLabel;
-	            }
-	            dateLabel = _x;
-	            return this;
-	        };
-	
-	        /**
 	         * Gets or Sets the height of the chart
 	         * @param  {Number} _x Desired width for the graph
 	         * @return { (Number | Module) } Current height or Line Chart module to chain calls
@@ -36106,34 +35700,6 @@
 	                return tooltipThreshold;
 	            }
 	            tooltipThreshold = _x;
-	            return this;
-	        };
-	
-	        /**
-	         * Gets or Sets the topicLabel of the chart
-	         * @param  {Number} _x Desired topicLabel for the graph
-	         * @return { topicLabel | module} Current topicLabel or Chart module to chain calls
-	         * @public
-	         */
-	        exports.topicLabel = function (_x) {
-	            if (!arguments.length) {
-	                return topicLabel;
-	            }
-	            topicLabel = _x;
-	            return this;
-	        };
-	
-	        /**
-	         * Gets or Sets the valueLabel of the chart
-	         * @param  {Number} _x Desired valueLabel for the graph
-	         * @return { valueLabel | module} Current valueLabel or Chart module to chain calls
-	         * @public
-	         */
-	        exports.valueLabel = function (_x) {
-	            if (!arguments.length) {
-	                return valueLabel;
-	            }
-	            valueLabel = _x;
 	            return this;
 	        };
 	
@@ -36210,9 +35776,9 @@
 	    'use strict';
 	
 	    var _ = __webpack_require__(3),
-	        jsonAllDatas = __webpack_require__(54),
-	        jsonFiveTopics = __webpack_require__(55),
-	        jsonOneSource = __webpack_require__(56),
+	        jsonFiveTopics = __webpack_require__(54),
+	        jsonOneSource = __webpack_require__(55),
+	        jsonDataNDates = __webpack_require__(56),
 	        jsonMultiMonthValueRange = __webpack_require__(57),
 	        jsonHourDateRange = __webpack_require__(58),
 	        jsonSmallValueRange = __webpack_require__(59);
@@ -36234,6 +35800,20 @@
 	            return new this.Klass(attributes);
 	        };
 	
+	        this.withNDates = function (n) {
+	            var data = jsonDataNDates,
+	                attributes;
+	
+	            if (n) {
+	                data.data[0].Data = data.data[0].Data.slice(0, n);
+	                data.dataByDate = data.dataByDate.slice(0, n);
+	            }
+	
+	            attributes = _.extend({}, this.config, data);
+	
+	            return new this.Klass(attributes);
+	        };
+	
 	        this.withSmallValueRange = function () {
 	            var attributes = _.extend({}, this.config, jsonSmallValueRange);
 	
@@ -36248,12 +35828,6 @@
 	
 	        this.withHourDateRange = function () {
 	            var attributes = _.extend({}, this.config, jsonHourDateRange);
-	
-	            return new this.Klass(attributes);
-	        };
-	
-	        this.withAllDatas = function () {
-	            var attributes = _.extend({}, this.config, jsonAllDatas);
 	
 	            return new this.Klass(attributes);
 	        };
@@ -36288,415 +35862,8 @@
 	module.exports = {
 		"data": [
 			{
-				"topicName": "Sales",
-				"topic": -1,
-				"value": 15,
-				"date": "2015-12-30T00:00:00-08:00"
-			},
-			{
-				"topicName": "Sales",
-				"topic": -1,
-				"value": 16,
-				"date": "2015-12-31T00:00:00-08:00"
-			},
-			{
-				"topicName": "Sales",
-				"topic": -1,
-				"value": 15,
-				"date": "2016-01-01T00:00:00-08:00"
-			},
-			{
-				"topicName": "Sales",
-				"topic": -1,
-				"value": 18,
-				"date": "2016-01-02T00:00:00-08:00"
-			},
-			{
-				"topicName": "Sales",
-				"topic": -1,
-				"value": 16,
-				"date": "2016-01-03T00:00:00-08:00"
-			}
-		],
-		"dataByTopic": [
-			{
-				"topic": -1,
-				"topicName": "Sales",
-				"dates": [
-					{
-						"value": 15,
-						"date": "2015-12-30T00:00:00-08:00"
-					},
-					{
-						"value": 16,
-						"date": "2015-12-31T00:00:00-08:00"
-					},
-					{
-						"value": 15,
-						"date": "2016-01-01T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-02T00:00:00-08:00"
-					},
-					{
-						"value": 16,
-						"date": "2016-01-03T00:00:00-08:00"
-					},
-					{
-						"value": 16,
-						"date": "2016-01-04T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-05T00:00:00-08:00"
-					},
-					{
-						"value": 15,
-						"date": "2016-01-06T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-07T00:00:00-08:00"
-					},
-					{
-						"value": 21,
-						"date": "2016-01-08T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-09T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-10T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-11T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-12T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-13T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-14T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-15T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-16T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-17T00:00:00-08:00"
-					},
-					{
-						"value": 20,
-						"date": "2016-01-18T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-19T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-20T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-21T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-22T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-23T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-24T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-25T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-26T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-27T00:00:00-08:00"
-					},
-					{
-						"value": 21,
-						"date": "2016-01-28T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-29T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-30T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-01-31T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-01T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-02T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-03T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-04T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-05T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-06T00:00:00-08:00"
-					},
-					{
-						"value": 20,
-						"date": "2016-02-07T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-08T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-09T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-10T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-11T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-12T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-13T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-14T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-15T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-16T00:00:00-08:00"
-					},
-					{
-						"value": 21,
-						"date": "2016-02-17T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-18T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-19T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-20T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-21T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-22T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-23T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-24T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-25T00:00:00-08:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-02-26T00:00:00-08:00"
-					},
-					{
-						"value": 20,
-						"date": "2016-02-27T00:00:00-08:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-02-28T00:00:00-08:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-02-29T00:00:00-08:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-01T00:00:00-08:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-02T00:00:00-08:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-03T00:00:00-08:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-04T00:00:00-08:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-05T00:00:00-08:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-06T00:00:00-08:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-07T00:00:00-08:00"
-					},
-					{
-						"value": 20,
-						"date": "2016-03-08T00:00:00-08:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-09T00:00:00-08:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-10T00:00:00-08:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-11T00:00:00-08:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-12T00:00:00-08:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-13T00:00:00-08:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-14T00:00:00-07:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-15T00:00:00-07:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-16T00:00:00-07:00"
-					},
-					{
-						"value": 17,
-						"date": "2016-03-17T00:00:00-07:00"
-					},
-					{
-						"value": 20,
-						"date": "2016-03-18T00:00:00-07:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-03-19T00:00:00-07:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-03-20T00:00:00-07:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-03-21T00:00:00-07:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-03-22T00:00:00-07:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-03-23T00:00:00-07:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-03-24T00:00:00-07:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-03-25T00:00:00-07:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-03-26T00:00:00-07:00"
-					},
-					{
-						"value": 18,
-						"date": "2016-03-27T00:00:00-07:00"
-					},
-					{
-						"value": 30,
-						"date": "2016-03-28T00:00:00-07:00"
-					}
-				]
-			}
-		]
-	};
-
-/***/ },
-/* 55 */
-/***/ function(module, exports) {
-
-	module.exports = {
-		"dataByTopic": [
-			{
 				"topic": 103,
-				"dates": [
+				"Data": [
 					{
 						"date": "27-Jun-15",
 						"value": 1,
@@ -36887,7 +36054,7 @@
 			},
 			{
 				"topic": 149,
-				"dates": [
+				"Data": [
 					{
 						"date": "27-Jun-15",
 						"value": 0,
@@ -37078,7 +36245,7 @@
 			},
 			{
 				"topic": 60,
-				"dates": [
+				"Data": [
 					{
 						"date": "27-Jun-15",
 						"value": 0,
@@ -37269,7 +36436,7 @@
 			},
 			{
 				"topic": 81,
-				"dates": [
+				"Data": [
 					{
 						"date": "27-Jun-15",
 						"value": 0,
@@ -37461,7 +36628,7 @@
 			{
 				"topic": 0,
 				"topicName": "Other",
-				"dates": [
+				"Data": [
 					{
 						"date": "27-Jun-15",
 						"value": 3,
@@ -38765,14 +37932,14 @@
 	};
 
 /***/ },
-/* 56 */
+/* 55 */
 /***/ function(module, exports) {
 
 	module.exports = {
-		"dataByTopic": [
+		"data": [
 			{
 				"topic": -1,
-				"dates": [
+				"Data": [
 					{
 						"date": "30-Dec-15",
 						"value": 15,
@@ -40132,15 +39299,1382 @@
 	};
 
 /***/ },
+/* 56 */
+/***/ function(module, exports) {
+
+	module.exports = {
+		"data": [
+			{
+				"topic": -1,
+				"Data": [
+					{
+						"date": "30-Dec-15",
+						"value": 15,
+						"fullDate": "2015-12-30T00:00:00-08:00"
+					},
+					{
+						"date": "31-Dec-15",
+						"value": 16,
+						"fullDate": "2015-12-31T00:00:00-08:00"
+					},
+					{
+						"date": "1-Jan-16",
+						"value": 15,
+						"fullDate": "2016-01-01T00:00:00-08:00"
+					},
+					{
+						"date": "2-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-02T00:00:00-08:00"
+					},
+					{
+						"date": "3-Jan-16",
+						"value": 16,
+						"fullDate": "2016-01-03T00:00:00-08:00"
+					},
+					{
+						"date": "4-Jan-16",
+						"value": 16,
+						"fullDate": "2016-01-04T00:00:00-08:00"
+					},
+					{
+						"date": "5-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-05T00:00:00-08:00"
+					},
+					{
+						"date": "6-Jan-16",
+						"value": 15,
+						"fullDate": "2016-01-06T00:00:00-08:00"
+					},
+					{
+						"date": "7-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-07T00:00:00-08:00"
+					},
+					{
+						"date": "8-Jan-16",
+						"value": 21,
+						"fullDate": "2016-01-08T00:00:00-08:00"
+					},
+					{
+						"date": "9-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-09T00:00:00-08:00"
+					},
+					{
+						"date": "10-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-10T00:00:00-08:00"
+					},
+					{
+						"date": "11-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-11T00:00:00-08:00"
+					},
+					{
+						"date": "12-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-12T00:00:00-08:00"
+					},
+					{
+						"date": "13-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-13T00:00:00-08:00"
+					},
+					{
+						"date": "14-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-14T00:00:00-08:00"
+					},
+					{
+						"date": "15-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-15T00:00:00-08:00"
+					},
+					{
+						"date": "16-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-16T00:00:00-08:00"
+					},
+					{
+						"date": "17-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-17T00:00:00-08:00"
+					},
+					{
+						"date": "18-Jan-16",
+						"value": 20,
+						"fullDate": "2016-01-18T00:00:00-08:00"
+					},
+					{
+						"date": "19-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-19T00:00:00-08:00"
+					},
+					{
+						"date": "20-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-20T00:00:00-08:00"
+					},
+					{
+						"date": "21-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-21T00:00:00-08:00"
+					},
+					{
+						"date": "22-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-22T00:00:00-08:00"
+					},
+					{
+						"date": "23-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-23T00:00:00-08:00"
+					},
+					{
+						"date": "24-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-24T00:00:00-08:00"
+					},
+					{
+						"date": "25-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-25T00:00:00-08:00"
+					},
+					{
+						"date": "26-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-26T00:00:00-08:00"
+					},
+					{
+						"date": "27-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-27T00:00:00-08:00"
+					},
+					{
+						"date": "28-Jan-16",
+						"value": 21,
+						"fullDate": "2016-01-28T00:00:00-08:00"
+					},
+					{
+						"date": "29-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-29T00:00:00-08:00"
+					},
+					{
+						"date": "30-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-30T00:00:00-08:00"
+					},
+					{
+						"date": "31-Jan-16",
+						"value": 18,
+						"fullDate": "2016-01-31T00:00:00-08:00"
+					},
+					{
+						"date": "1-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-01T00:00:00-08:00"
+					},
+					{
+						"date": "2-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-02T00:00:00-08:00"
+					},
+					{
+						"date": "3-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-03T00:00:00-08:00"
+					},
+					{
+						"date": "4-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-04T00:00:00-08:00"
+					},
+					{
+						"date": "5-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-05T00:00:00-08:00"
+					},
+					{
+						"date": "6-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-06T00:00:00-08:00"
+					},
+					{
+						"date": "7-Feb-16",
+						"value": 20,
+						"fullDate": "2016-02-07T00:00:00-08:00"
+					},
+					{
+						"date": "8-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-08T00:00:00-08:00"
+					},
+					{
+						"date": "9-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-09T00:00:00-08:00"
+					},
+					{
+						"date": "10-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-10T00:00:00-08:00"
+					},
+					{
+						"date": "11-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-11T00:00:00-08:00"
+					},
+					{
+						"date": "12-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-12T00:00:00-08:00"
+					},
+					{
+						"date": "13-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-13T00:00:00-08:00"
+					},
+					{
+						"date": "14-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-14T00:00:00-08:00"
+					},
+					{
+						"date": "15-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-15T00:00:00-08:00"
+					},
+					{
+						"date": "16-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-16T00:00:00-08:00"
+					},
+					{
+						"date": "17-Feb-16",
+						"value": 21,
+						"fullDate": "2016-02-17T00:00:00-08:00"
+					},
+					{
+						"date": "18-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-18T00:00:00-08:00"
+					},
+					{
+						"date": "19-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-19T00:00:00-08:00"
+					},
+					{
+						"date": "20-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-20T00:00:00-08:00"
+					},
+					{
+						"date": "21-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-21T00:00:00-08:00"
+					},
+					{
+						"date": "22-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-22T00:00:00-08:00"
+					},
+					{
+						"date": "23-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-23T00:00:00-08:00"
+					},
+					{
+						"date": "24-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-24T00:00:00-08:00"
+					},
+					{
+						"date": "25-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-25T00:00:00-08:00"
+					},
+					{
+						"date": "26-Feb-16",
+						"value": 18,
+						"fullDate": "2016-02-26T00:00:00-08:00"
+					},
+					{
+						"date": "27-Feb-16",
+						"value": 20,
+						"fullDate": "2016-02-27T00:00:00-08:00"
+					},
+					{
+						"date": "28-Feb-16",
+						"value": 17,
+						"fullDate": "2016-02-28T00:00:00-08:00"
+					},
+					{
+						"date": "29-Feb-16",
+						"value": 17,
+						"fullDate": "2016-02-29T00:00:00-08:00"
+					},
+					{
+						"date": "1-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-01T00:00:00-08:00"
+					},
+					{
+						"date": "2-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-02T00:00:00-08:00"
+					},
+					{
+						"date": "3-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-03T00:00:00-08:00"
+					},
+					{
+						"date": "4-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-04T00:00:00-08:00"
+					},
+					{
+						"date": "5-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-05T00:00:00-08:00"
+					},
+					{
+						"date": "6-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-06T00:00:00-08:00"
+					},
+					{
+						"date": "7-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-07T00:00:00-08:00"
+					},
+					{
+						"date": "8-Mar-16",
+						"value": 20,
+						"fullDate": "2016-03-08T00:00:00-08:00"
+					},
+					{
+						"date": "9-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-09T00:00:00-08:00"
+					},
+					{
+						"date": "10-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-10T00:00:00-08:00"
+					},
+					{
+						"date": "11-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-11T00:00:00-08:00"
+					},
+					{
+						"date": "12-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-12T00:00:00-08:00"
+					},
+					{
+						"date": "13-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-13T00:00:00-08:00"
+					},
+					{
+						"date": "14-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-14T00:00:00-07:00"
+					},
+					{
+						"date": "15-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-15T00:00:00-07:00"
+					},
+					{
+						"date": "16-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-16T00:00:00-07:00"
+					},
+					{
+						"date": "17-Mar-16",
+						"value": 17,
+						"fullDate": "2016-03-17T00:00:00-07:00"
+					},
+					{
+						"date": "18-Mar-16",
+						"value": 20,
+						"fullDate": "2016-03-18T00:00:00-07:00"
+					},
+					{
+						"date": "19-Mar-16",
+						"value": 18,
+						"fullDate": "2016-03-19T00:00:00-07:00"
+					},
+					{
+						"date": "20-Mar-16",
+						"value": 18,
+						"fullDate": "2016-03-20T00:00:00-07:00"
+					},
+					{
+						"date": "21-Mar-16",
+						"value": 18,
+						"fullDate": "2016-03-21T00:00:00-07:00"
+					},
+					{
+						"date": "22-Mar-16",
+						"value": 18,
+						"fullDate": "2016-03-22T00:00:00-07:00"
+					},
+					{
+						"date": "23-Mar-16",
+						"value": 18,
+						"fullDate": "2016-03-23T00:00:00-07:00"
+					},
+					{
+						"date": "24-Mar-16",
+						"value": 18,
+						"fullDate": "2016-03-24T00:00:00-07:00"
+					},
+					{
+						"date": "25-Mar-16",
+						"value": 18,
+						"fullDate": "2016-03-25T00:00:00-07:00"
+					},
+					{
+						"date": "26-Mar-16",
+						"value": 18,
+						"fullDate": "2016-03-26T00:00:00-07:00"
+					},
+					{
+						"date": "27-Mar-16",
+						"value": 18,
+						"fullDate": "2016-03-27T00:00:00-07:00"
+					},
+					{
+						"date": "28-Mar-16",
+						"value": 30,
+						"fullDate": "2016-03-28T00:00:00-07:00"
+					}
+				],
+				"topicName": "Sales"
+			}
+		],
+		"dataByDate": [
+			{
+				"date": "2015-12-30T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 15,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2015-12-31T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 16,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-01T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 15,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-02T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-03T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 16,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-04T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 16,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-05T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-06T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 15,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-07T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-08T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 21,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-09T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-10T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-11T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-12T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-13T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-14T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-15T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-16T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-17T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-18T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 20,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-19T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-20T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-21T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-22T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-23T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-24T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-25T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-26T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-27T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-28T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 21,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-29T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-30T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-01-31T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-01T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-02T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-03T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-04T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-05T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-06T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-07T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 20,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-08T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-09T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-10T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-11T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-12T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-13T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-14T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-15T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-16T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-17T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 21,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-18T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-19T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-20T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-21T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-22T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-23T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-24T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-25T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-26T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-27T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 20,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-28T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-02-29T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-01T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-02T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-03T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-04T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-05T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-06T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-07T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-08T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 20,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-09T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-10T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-11T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-12T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-13T08:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-14T07:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-15T07:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-16T07:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-17T07:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 17,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-18T07:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 20,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-19T07:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-20T07:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-21T07:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-22T07:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-23T07:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-24T07:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-25T07:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-26T07:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-27T07:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 18,
+						"topicName": "Sales"
+					}
+				]
+			},
+			{
+				"date": "2016-03-28T07:00:00.000Z",
+				"topics": [
+					{
+						"name": -1,
+						"value": 30,
+						"topicName": "Sales"
+					}
+				]
+			}
+		]
+	};
+
+/***/ },
 /* 57 */
 /***/ function(module, exports) {
 
 	module.exports = {
-		"dataByTopic": [
+		"data": [
 			{
 				"topic": -1,
 				"topicName": "Quantity",
-				"dates": [
+				"Data": [
 					{
 						"date": 1422000000000,
 						"value": 0,
@@ -51125,7 +51659,11 @@
 					}
 				]
 			}
-		]
+		],
+		"readableDataType": {
+			"name": "Quantity Sold",
+			"type": "number"
+		}
 	};
 
 /***/ },
@@ -51133,11 +51671,11 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-		"dataByTopic": [
+		"data": [
 			{
 				"topic": -1,
 				"topicName": "Quantity",
-				"dates": [
+				"Data": [
 					{
 						"date": "16-Jan-17",
 						"value": 0,
@@ -51502,7 +52040,11 @@
 					}
 				]
 			}
-		]
+		],
+		"readableDataType": {
+			"name": "Quantity Sold",
+			"type": "number"
+		}
 	};
 
 /***/ },
@@ -51510,10 +52052,10 @@
 /***/ function(module, exports) {
 
 	module.exports = {
-		"dataByTopic": [
+		"data": [
 			{
 				"topic": -1,
-				"dates": [
+				"Data": [
 					{
 						"date": "30-Dec-15",
 						"value": 0,
@@ -52142,7 +52684,7 @@
 	var d3Selection = __webpack_require__(4),
 	    PubSub = __webpack_require__(5),
 	    step = __webpack_require__(65),
-	    miniTooltip = __webpack_require__(41),
+	    miniTooltip = __webpack_require__(40),
 	    dataBuilder = __webpack_require__(66);
 	
 	function createStepChart() {
@@ -52706,8 +53248,6 @@
 	        });
 	
 	        brushContainer.datum(dataset).call(brushChart);
-	
-	        brushChart.dateRange(["9/15/2015", "1/25/2016"]);
 	    }
 	}
 	
@@ -52730,8 +53270,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;'use strict';
-	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 	
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
 	    'use strict';
@@ -52804,7 +53342,6 @@
 	            ease = d3Ease.easeQuadOut,
 	            dateLabel = 'date',
 	            valueLabel = 'value',
-	            dateRange = [null, null],
 	            chartWidth = void 0,
 	            chartHeight = void 0,
 	            xScale = void 0,
@@ -52853,6 +53390,10 @@
 	                drawAxis();
 	                drawBrush();
 	                drawHandles();
+	
+	                // This last step is optional, just needed when
+	                // a given selection would need to be shown
+	                setBrush(0.25, 0.5);
 	            });
 	        }
 	
@@ -53045,24 +53586,10 @@
 	         * Sets a new brush extent within the passed percentage positions
 	         * @param {Number} a Percentage of data that the brush start with
 	         * @param {Number} b Percentage of data that the brush ends with
-	         * @example
-	         *     setBrushByPercentages(0.25, 0.5)
 	         */
-	        function setBrushByPercentages(a, b) {
+	        function setBrush(a, b) {
 	            var x0 = a * chartWidth,
 	                x1 = b * chartWidth;
-	
-	            brush.move(chartBrush, [x0, x1]);
-	        }
-	
-	        /**
-	         * Sets a new brush extent within the passed dates
-	         * @param {String | Date} dateA Initial Date
-	         * @param {String | Date} dateB End Date
-	         */
-	        function setBrushByDates(dateA, dateB) {
-	            var x0 = xScale(new Date(dateA)),
-	                x1 = xScale(new Date(dateB));
 	
 	            brush.move(chartBrush, [x0, x1]);
 	        }
@@ -53081,27 +53608,6 @@
 	                });
 	            }
 	        }
-	
-	        // API
-	
-	        /**
-	         * Gets or Sets the dateRange for the selected part of the brush
-	         * @param  {String[]} _x Desired dateRange for the graph
-	         * @return { dateRange | module} Current dateRange or Chart module to chain calls
-	         * @public
-	         */
-	        exports.dateRange = function (_x) {
-	            if (!arguments.length) {
-	                return dateRange;
-	            }
-	            dateRange = _x;
-	
-	            if (Array.isArray(dateRange)) {
-	                setBrushByDates.apply(undefined, _toConsumableArray(dateRange));
-	            }
-	
-	            return this;
-	        };
 	
 	        /**
 	         * Gets or Sets the gradient of the chart
